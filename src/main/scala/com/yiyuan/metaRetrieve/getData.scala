@@ -41,8 +41,12 @@ class getData {
 
     val typeData = schemadataSplit.takeWhile(_ != schemadataSplit.last)
 
-
-    if(!typeData(0).equalsIgnoreCase("readFromFile")) {
+    if(formatType.equals("parquet") || formatType.equals("avro") || formatType.equals("orc")){
+      println("Data will be read as it is as attaching schema is not possible.")
+      val directRead = sparkSess.read.format(formatType).load(readPath)
+      directRead
+    }
+    else if(!typeData(0).equalsIgnoreCase("readFromFile")) {
       val mappedTypeData = typeData.map(base => {
         val datasplit = base.split("/")
         (datasplit(0), datasplit(1))
